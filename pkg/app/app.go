@@ -9,7 +9,7 @@ import (
 )
 
 type App struct {
-	Bot *bot.TelegramBot
+	bot *bot.TelegramBot
 }
 
 func Start(cfg *config.Config) {
@@ -23,8 +23,8 @@ func Start(cfg *config.Config) {
 	}
 
 	app := &App{
-		Bot: bot,
+		bot: bot,
 	}
 
-	app.Bot.ReadMessages()
+	app.bot.ReadMessages()
 }

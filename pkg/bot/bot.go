@@ -1,7 +1,6 @@
 package bot
 
 import (
-	"fmt"
 	"log/slog"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -30,10 +29,9 @@ func New(cfg Config) (*TelegramBot, error) {
 }
 
 func (tg *TelegramBot) ReadMessages() {
-
 	tg.Bot.Debug = false
 
-	fmt.Println("authorized on account", slog.String("name", tg.Bot.Self.UserName))
+	slog.Info("authorized on account", slog.String("name", tg.Bot.Self.UserName))
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
