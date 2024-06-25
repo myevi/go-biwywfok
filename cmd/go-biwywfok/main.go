@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/myevi/go-biwywfok/pkg/app"
 	"github.com/myevi/go-biwywfok/pkg/config"
@@ -10,8 +13,6 @@ import (
 
 const (
 	envLocal = "local"
-	envDev   = "dev"
-	envProd  = "prod"
 )
 
 func main() {
@@ -22,7 +23,16 @@ func main() {
 
 	log.Info("biwywfok started")
 	log.Debug("logger debug mode enabled")
-	app.Start(cfg)
+
+	go func ()  {
+		app.Start(cfg)
+	}()
+	
+
+    ch := make(chan os.Signal, 1)
+    signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
+    slog.Info(fmt.Sprint(<-ch))
+    slog.Info("Stopping API server.")
 }
 
 func setupLogger() *slog.Logger {
