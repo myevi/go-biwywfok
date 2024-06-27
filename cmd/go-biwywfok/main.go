@@ -24,15 +24,17 @@ func main() {
 	log.Info("biwywfok started")
 	log.Debug("logger debug mode enabled")
 
-	go func ()  {
-		app.Start(cfg)
+	go func() {
+		if err := app.Start(cfg); err != nil {
+			slog.Error("start app", "error", err)
+			return
+		}
 	}()
-	
 
-    ch := make(chan os.Signal, 1)
-    signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
-    slog.Info(fmt.Sprint(<-ch))
-    slog.Info("Stopping API server.")
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, syscall.SIGINT, syscall.SIGTERM)
+	slog.Info(fmt.Sprint(<-ch))
+	slog.Info("Stopping API server.")
 }
 
 func setupLogger() *slog.Logger {

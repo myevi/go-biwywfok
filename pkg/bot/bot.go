@@ -4,33 +4,38 @@ import (
 	"log/slog"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/myevi/go-biwywfok/pkg/adapter/openai"
+	"github.com/myevi/go-biwywfok/pkg/entities"
 )
 
 type Config struct {
 	Token string
+	URL   string
 }
 
 type TelegramBot struct {
-	Bot    *tgbotapi.BotAPI
-	Config Config
-	//Must be DB here
+	Bot          *tgbotapi.BotAPI
+	Config       Config
+	OpenAI       *openai.Client
+	UserMessages []entities.ChatGptMessage
 }
 
-func New(cfg Config) (*TelegramBot, error) {
+func New(cfg Config, openAIClient *openai.Client) (*TelegramBot, error) {
 	bot, err := tgbotapi.NewBotAPI(cfg.Token)
 	if err != nil {
 		return nil, err
 	}
 
 	return &TelegramBot{
-		Bot:    bot,
-		Config: cfg,
+		Bot:          bot,
+		Config:       cfg,
+		OpenAI:       openAIClient,
+		UserMessages: make([]entities.ChatGptMessage, 1),
 	}, nil
 }
 
 func (tg *TelegramBot) ReadMessages() {
 	tg.Bot.Debug = false
-
 	slog.Info("authorized on account", slog.String("name", tg.Bot.Self.UserName))
 
 	u := tgbotapi.NewUpdate(0)

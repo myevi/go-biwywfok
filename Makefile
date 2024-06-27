@@ -6,5 +6,5 @@ build:
 vendor: 
 	go mod tidy && go mod vendor
 
-up:
-	make build && ./builds/go-biwywfok
+up: build
+	./builds/go-biwywfok

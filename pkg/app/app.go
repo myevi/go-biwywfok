@@ -1,9 +1,7 @@
 package app
 
 import (
-	"fmt"
-	"log/slog"
-
+	"github.com/myevi/go-biwywfok/pkg/adapter/openai"
 	"github.com/myevi/go-biwywfok/pkg/bot"
 	"github.com/myevi/go-biwywfok/pkg/config"
 )
@@ -12,14 +10,20 @@ type App struct {
 	bot *bot.TelegramBot
 }
 
-func Start(cfg *config.Config) {
+func Start(cfg *config.Config) (err error) {
+	openai, err := openai.New(openai.Config{
+		Token: cfg.OpenAIToken,
+		URL:   cfg.OpenAIURL,
+	})
+	if err != nil {
+		return err
+	}
+
 	bot, err := bot.New(bot.Config{
 		Token: cfg.TelegramToken,
-	})
-
+	}, openai)
 	if err != nil {
-		fmt.Println("bot is not created", slog.String("error", err.Error()))
-		return
+		return err
 	}
 
 	app := &App{
@@ -27,4 +31,5 @@ func Start(cfg *config.Config) {
 	}
 
 	app.bot.ReadMessages()
+	return
 }

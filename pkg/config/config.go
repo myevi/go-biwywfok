@@ -9,6 +9,8 @@ import (
 
 type Config struct {
 	TelegramToken string `yaml:"telegram_token"`
+	OpenAIToken   string `yaml:"openai_token"`
+	OpenAIURL     string `yaml:"openai_url"`
 }
 
 func MustLoad() *Config {
