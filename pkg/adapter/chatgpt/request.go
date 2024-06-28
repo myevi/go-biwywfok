@@ -1,4 +1,4 @@
-package openai
+package chatgpt
 
 import (
 	"bytes"
@@ -8,19 +8,18 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
-	"os"
 
 	"github.com/myevi/go-biwywfok/pkg/entities"
 )
 
 type Request struct {
 	Model    string                    `json:"model"` // TODO set constraints
-	Messages []entities.ChatGptMessage `json:"messages"`
+	Messages []entities.ChatgptMessage `json:"messages"`
 }
 
-func (c *Client) ChatRequest(ctx context.Context, messages []entities.ChatGptMessage) (interface{}, error) {
+func (c *Client) ChatRequest(ctx context.Context, messages []entities.ChatgptMessage) (interface{}, error) {
 	requestBody := Request{
-		Model:    "gpt-3.5-turbo", // TODO make not a constant
+		Model:    c.model,
 		Messages: messages,
 	}
 
@@ -55,10 +54,5 @@ func (c *Client) ChatRequest(ctx context.Context, messages []entities.ChatGptMes
 	}
 
 	slog.Info("response from openai", "data", string(data))
-	os.Exit(1)
-	if err != nil {
-		return nil, fmt.Errorf("")
-	}
-
-	return struct{}{}, nil
+	return string(data), nil
 }

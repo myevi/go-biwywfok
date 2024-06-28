@@ -6,9 +6,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-
-	"github.com/myevi/go-biwywfok/pkg/app"
-	"github.com/myevi/go-biwywfok/pkg/config"
 )
 
 const (
@@ -16,7 +13,7 @@ const (
 )
 
 func main() {
-	cfg := config.MustLoad()
+	cfg := MustLoad()
 
 	log := setupLogger()
 	log = log.With(slog.String("env", envLocal))
@@ -25,7 +22,7 @@ func main() {
 	log.Debug("logger debug mode enabled")
 
 	go func() {
-		if err := app.Start(cfg); err != nil {
+		if err := start(cfg); err != nil {
 			slog.Error("start app", "error", err)
 			return
 		}

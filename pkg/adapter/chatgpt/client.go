@@ -1,4 +1,4 @@
-package openai
+package chatgpt
 
 import (
 	"errors"
@@ -8,12 +8,15 @@ import (
 type Config struct {
 	URL   string
 	Token string
+	Model string
 }
 
 type Client struct {
+	http *http.Client
+
 	baseURL string
 	token   string
-	http    *http.Client
+	model   string
 }
 
 func New(cfg Config) (*Client, error) {
@@ -26,10 +29,11 @@ func New(cfg Config) (*Client, error) {
 	}
 
 	return &Client{
-		baseURL: cfg.URL,
-		token:   cfg.Token,
 		http: &http.Client{
 			Transport: http.DefaultTransport,
 		},
+		baseURL: cfg.URL,
+		token:   cfg.Token,
+		model:   cfg.Model,
 	}, nil
 }

@@ -4,7 +4,7 @@ import (
 	"log/slog"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	"github.com/myevi/go-biwywfok/pkg/adapter/openai"
+	"github.com/myevi/go-biwywfok/pkg/adapter/chatgpt"
 	"github.com/myevi/go-biwywfok/pkg/entities"
 )
 
@@ -16,11 +16,11 @@ type Config struct {
 type TelegramBot struct {
 	Bot          *tgbotapi.BotAPI
 	Config       Config
-	OpenAI       *openai.Client
-	UserMessages []entities.ChatGptMessage
+	OpenAI       *chatgpt.Client
+	UserMessages []entities.ChatgptMessage
 }
 
-func New(cfg Config, openAIClient *openai.Client) (*TelegramBot, error) {
+func New(cfg Config, chatgptClient *chatgpt.Client) (*TelegramBot, error) {
 	bot, err := tgbotapi.NewBotAPI(cfg.Token)
 	if err != nil {
 		return nil, err
@@ -29,8 +29,8 @@ func New(cfg Config, openAIClient *openai.Client) (*TelegramBot, error) {
 	return &TelegramBot{
 		Bot:          bot,
 		Config:       cfg,
-		OpenAI:       openAIClient,
-		UserMessages: make([]entities.ChatGptMessage, 1),
+		OpenAI:       chatgptClient,
+		UserMessages: make([]entities.ChatgptMessage, 1),
 	}, nil
 }
 
@@ -45,13 +45,13 @@ func (tg *TelegramBot) ReadMessages() {
 
 	for update := range updates {
 		if update.Message != nil {
-			response, err := tg.reader(update.Message)
+			// TODO why do i need chech that response?
+			response, err := tg.Bot.Send(*tg.reader(update.Message))
 			if err != nil {
 				slog.Error("bot: read message", slog.String("error", err.Error()))
-				continue
 			}
 
-			tg.Bot.Send(*response)
+			slog.Info("bot: read message", slog.String("msg", response.Text))
 		}
 	}
 }

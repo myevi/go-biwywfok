@@ -7,22 +7,22 @@ import (
 	"github.com/myevi/go-biwywfok/pkg/entities"
 )
 
-var systemMessage = entities.ChatGptMessage{
+var systemMessage = entities.ChatgptMessage{
 	Role:    "system",
 	Content: "You are helpful assistant",
 }
 
-func (tg *TelegramBot) reader(msg *tgbotapi.Message) (*tgbotapi.MessageConfig, error) {
+func (tg *TelegramBot) reader(msg *tgbotapi.Message) *tgbotapi.MessageConfig {
 	slog.Info("\033[91m->message\033[0m", slog.String("from", msg.From.UserName), slog.String("text", msg.Text))
 	var responseMessage string
 	switch msg.Text {
 	case "/start":
-		tg.UserMessages = []entities.ChatGptMessage{
+		tg.UserMessages = []entities.ChatgptMessage{
 			systemMessage,
 		}
 		responseMessage = "ask me something"
 	default:
-		userMessage := entities.ChatGptMessage{
+		userMessage := entities.ChatgptMessage{
 			Role:    "user",
 			Content: msg.Text,
 		}
@@ -34,5 +34,5 @@ func (tg *TelegramBot) reader(msg *tgbotapi.Message) (*tgbotapi.MessageConfig, e
 	response.ReplyToMessageID = msg.MessageID
 
 	slog.Info("\033[91mmessage->\033[0m", slog.String("to", msg.From.UserName), slog.String("text", responseMessage))
-	return &response, nil
+	return &response
 }

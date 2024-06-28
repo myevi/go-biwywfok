@@ -1,6 +1,6 @@
 package entities
 
-type ChatGptMessage struct {
+type ChatgptMessage struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
 }
