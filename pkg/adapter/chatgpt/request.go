@@ -13,7 +13,7 @@ import (
 )
 
 type Request struct {
-	Model    string                    `json:"model"` // TODO set constraints
+	Model    string                    `json:"model"`
 	Messages []entities.ChatgptMessage `json:"messages"`
 }
 

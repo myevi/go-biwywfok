@@ -45,7 +45,7 @@ func start(cfg *Config) (err error) {
 	return
 }
 
-func MustLoad() *Config {
+func mustLoad() *Config {
 	configPath := "configs/config.yml"
 	if _, err := os.Stat(configPath); err != nil {
 		log.Fatalf("error opening config file: %s", err)

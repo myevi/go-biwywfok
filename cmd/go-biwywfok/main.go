@@ -13,7 +13,7 @@ const (
 )
 
 func main() {
-	cfg := MustLoad()
+	cfg := mustLoad()
 
 	log := setupLogger()
 	log = log.With(slog.String("env", envLocal))
